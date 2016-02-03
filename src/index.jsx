@@ -7,7 +7,7 @@ import ArticleList from './components/article-list';
 import { PageHeader, Grid, Row, Col } from 'react-bootstrap';
 
 // uncomment next line to enable the dev-tools.
-import 'mobservable-react-devtools';
+// import 'mobservable-react-devtools';
 
 @observer
 class App extends Component {
