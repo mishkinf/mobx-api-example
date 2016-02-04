@@ -2,11 +2,12 @@ import {observable} from 'mobservable';
 
 const store = observable({
     articles: {
-        data: '',
+        data: [],
         isFetching: false,
         errors: [],
         lastRequest: null
-    }
+    },
+    isFakeApi: true
 });
 
 class StoreAdapter {
@@ -14,6 +15,7 @@ class StoreAdapter {
         if(this.create === undefined) { throw new TypeError('Must override create method'); }
         if(this.update === undefined) { throw new TypeError('Must override update method'); }
         if(this.read === undefined) { throw new TypeError('Must override read method'); }
+        if(this.read_all === undefined) { throw new TypeError('Must override read method'); }
         if(this.delete === undefined) { throw new TypeError('Must override delete method'); }
     }
 }
@@ -25,27 +27,95 @@ class RestApiStoreAdapter extends StoreAdapter {
         this.url = url;
     }
     
-    create() {
-        
+    create(item) {
+        console.log('rest adapter create');
     }
     
-    update() {
-        
+    update(item) {
+        console.log('rest adapter update');
     }
     
-    read() {
-        
+    read(id) {
+        console.log('rest adapter read');
     }
     
-    delete() {
+    read_all() {
+        console.log('rest adapter read all');
+        if(store[this.noun] == undefined || store[this.noun] == null) {
+            store[this.noun] = Object.assign({}, store[this.noun], {
+                data: [],
+                isFetching: true,
+                errors: [],
+                lastRequest: null
+            });        
+        } else {
+            store[this.noun] = Object.assign({}, store[this.noun], {
+                isFetching: true,
+                lastRequest: null                
+            });
+            // debugger;
+            // if(store[this.noun].data == undefined) {
+            //     store[this.noun].data = []
+            // }
+        }
         
+        console.log('Fetching: ', this.url);
+        const requestStartTime = (new Date()).getTime();
+        this.makeRequest(requestStartTime);
+    }
+    
+    makeRequest(requestStartTime) {
+        fetch(this.url)
+            .then(response => response.json())
+            .then(json => {
+                if(store[this.noun].lastRequest != null && requestStartTime < store[this.noun].lastRequest) {
+                    console.log('STALE SUCCESS RESPONSE', 'this response is older than another response! ', requestStartTime, store[this.noun].lastRequest);
+                    return;
+                } 
+                console.log('success: ', json);
+                
+                if(json.error != null || json.error != undefined) {
+                    throw new Error('Not Found');
+                }
+                
+                store[this.noun] = {
+                    data: json.data.children.map(function(item) {return item.data}),
+                    errors: [],
+                    isFetching: false,
+                    lastRequest: requestStartTime
+                };
+            })
+            .catch((error) => {
+                debugger;
+                
+                if(store[this.noun].lastRequest != null && requestStartTime < store[this.noun].lastRequest) {
+                    console.log('STALE ERROR RESPONSE', 'this response is older than another response! ', requestStartTime, store[this.noun].lastRequest);
+                    return;
+                }
+                
+                store[this.noun] = {
+                    data: [],
+                    errors: error,
+                    isFetching: false
+                };
+            });  
+    }
+    
+    delete(id) {
+        console.log('rest adapter delete');
     }
 }
-// extends StoreAdapter
+
 class LocalStoreAdapter extends StoreAdapter {
     constructor(noun) {
         super();
         this.noun = noun;
+        this.global_count = 0
+        // store[this.noun] = {
+        //     isFetching: false,
+        //     data: [],
+        //     errors: []
+        // }
         
         localStorage.setItem(this.noun, JSON.stringify([]));
     }
@@ -53,7 +123,7 @@ class LocalStoreAdapter extends StoreAdapter {
     create(item) {
         console.log('creating ', this.noun);
         var currentItems = JSON.parse(localStorage.getItem(this.noun));
-        var insertItem = Object.assign({}, item, {id: currentItems.length});
+        var insertItem = Object.assign({}, item, {id: this.global_count++});
         currentItems.push(insertItem);
         localStorage.setItem(this.noun, JSON.stringify(currentItems));
         return insertItem;
@@ -85,30 +155,68 @@ class LocalStoreAdapter extends StoreAdapter {
     delete(id) {
         console.log('delete');
         var currentItems = JSON.parse(localStorage.getItem(this.noun));
-        var deleteItem = currentItems.filter(function(i) { return item.id == i.id })[0];
-        currentItems = currentItems.splice(currentItems.indexOf(deleteItem), 1);
+        var deleteItem = currentItems.filter(function(item) { return id == item.id })[0];
+        currentItems.splice(currentItems.indexOf(deleteItem), 1);
         localStorage.setItem(this.noun, JSON.stringify(currentItems));
         
         return currentItems;  
     }
 }
 
-const storeAdapter = new LocalStoreAdapter();
+store.adapter = new LocalStoreAdapter('articles');
 
-store.create = function() {
-    storeAdapter.create();
+store.setFakeApi = function(useFakeApi) {
+    if(useFakeApi) {
+        console.log('setting api to localstoreadapter');
+        store.adapter = new LocalStoreAdapter('articles');
+        store.isFakeApi = true;
+    } else {
+        console.log('setting api to restapistoreadapter');
+        store.adapter = new RestApiStoreAdapter('articles', 'https://www.reddit.com/hot.json');
+        store.isFakeApi = false;
+    }
+    store.articles = {
+        data: [],
+        isFetching: false
+    };
+}
+
+store.get = function(noun) {
+    console.log(store[noun].data);
+    // if(store[noun] == undefined || store[noun].data == null || store[noun].data == undefined || !Array.isArray(store[noun].data)) {
+    //     store[noun].data = [];
+    //     //     data: [],
+    //     //     isFetching: false,
+    //     //     errors: [],
+    //     //     lastRequest: null
+    //     // }
+    // } 
+    
+    return store[noun];
 };
 
-store.update = function() {
-    storeAdapter.update();
+store.create = function(noun, item) {
+    store.adapter.create(item);
+    store[noun].data = store.adapter.read_all();
 };
 
-store.delete = function() {
-    storeAdapter.delete();
+store.update = function(noun, item) {
+    store.adapter.update(item);
+    store[noun].data = store.adapter.read_all();
 };
 
-store.read = function() {
-    storeAdapter.read();
+store.read_all = function(noun) {
+    store.adapter.read_all();    
+}
+
+store.delete = function(noun, id) {
+    store.adapter.delete(id);
+    store[noun].data = store.adapter.read_all();    
+};
+
+store.read = function(noun, id) {
+    store.adapter.read(id);
+    store[noun].data = store.adapter.read_all();    
 };
 
 store.apiRequest = function(noun, url, successFn=null, errorFn=null) {
@@ -116,7 +224,7 @@ store.apiRequest = function(noun, url, successFn=null, errorFn=null) {
 
     if(store[namespace] == undefined || store[namespace] == null) {
        store[namespace] = {
-           data: '',
+           data: [],
            isFetching: true,
            errors: [],
            lastRequest: null
@@ -162,7 +270,7 @@ store.apiRequest = function(noun, url, successFn=null, errorFn=null) {
             } else {
                 store[namespace].errors = error;    
             }
-            store[namespace].data = '';                
+            store[namespace].data = [];                
             store[namespace].isFetching = false;            
         }); 
 };
