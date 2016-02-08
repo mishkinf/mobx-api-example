@@ -29,10 +29,13 @@ class RestApiStoreAdapter extends StoreAdapter {
     
     create(item) {
         console.log('rest adapter create');
+        const requestStartTime = (new Date()).getTime();
+        this.post(requestStartTime, item);
     }
     
     update(item) {
         console.log('rest adapter update');
+        
     }
     
     read(id) {
@@ -61,25 +64,57 @@ class RestApiStoreAdapter extends StoreAdapter {
         
         console.log('Fetching: ', this.url);
         const requestStartTime = (new Date()).getTime();
-        this.makeRequest(requestStartTime);
+        this.get(requestStartTime);
     }
     
-    makeRequest(requestStartTime) {
-        fetch(this.url)
+    post(requestStartTime, item) {
+        var data = new FormData();
+        data.append( this.noun, JSON.stringify( item ).toString() );
+
+        fetch(this.url + '/' + this.noun,
+        {
+            method: "POST",
+            body: data
+        }).then(response => response.json())
+        .then(json => {
+            // do something
+        })
+        .catch((error) => {
+            debugger;
+            
+            if(store[this.noun].lastRequest != null && requestStartTime < store[this.noun].lastRequest) {
+                console.log('STALE ERROR RESPONSE', 'this response is older than another response! ', requestStartTime, store[this.noun].lastRequest);
+                return;
+            }
+            
+            // do something else
+        });
+    }
+    
+    put(requestStartTime, item) {
+        
+    }
+    
+    delete(requestStartTime, id) {
+        
+    }
+    
+    get(requestStartTime) {
+        fetch(this.url + '/' + this.noun + '.json')
             .then(response => response.json())
             .then(json => {
                 if(store[this.noun].lastRequest != null && requestStartTime < store[this.noun].lastRequest) {
                     console.log('STALE SUCCESS RESPONSE', 'this response is older than another response! ', requestStartTime, store[this.noun].lastRequest);
                     return;
                 } 
-                console.log('success: ', json);
+                console.log('success: ', json[this.noun]);
                 
                 if(json.error != null || json.error != undefined) {
                     throw new Error('Not Found');
                 }
                 
                 store[this.noun] = {
-                    data: json.data.children.map(function(item) {return item.data}),
+                    data: json[this.noun],
                     errors: [],
                     isFetching: false,
                     lastRequest: requestStartTime
@@ -172,7 +207,7 @@ store.setFakeApi = function(useFakeApi) {
         store.isFakeApi = true;
     } else {
         console.log('setting api to restapistoreadapter');
-        store.adapter = new RestApiStoreAdapter('articles', 'https://www.reddit.com/hot.json');
+        store.adapter = new RestApiStoreAdapter('articles', 'http://localhost:3001/api');
         store.isFakeApi = false;
     }
     store.articles = {

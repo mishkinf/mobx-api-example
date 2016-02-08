@@ -4,6 +4,7 @@ import {observer} from 'mobservable-react';
 import { Table } from 'react-bootstrap';
 import Faker from 'faker';
 import Toggle from 'react-toggle';
+import InlineEdit from 'react-edit-inline';
 
 @observer
 class TodoList extends Component {
@@ -35,8 +36,22 @@ class TodoList extends Component {
                     {articles.data.map(article => {
                         return (<tr key={article.id}>
                             <td>{article.id}</td>
-                            <td>{article.title}</td>
-                            <td>{article.author}</td>
+                            <td> 
+                                <InlineEdit
+                                    activeClassName="editing"
+                                    text={article.title}
+                                    paramName="title"
+                                    change={(data) => this.dataChanged({id: article.id, title: data.title})}
+                                    />
+                            </td>
+                            <td>
+                             <InlineEdit
+                                    activeClassName="editing"
+                                    text={article.author}
+                                    paramName="author"
+                                    change={(data) => this.dataChanged({id: article.id, author: data.author})}
+                                    />
+                            </td>
                             <td><button onClick={() => store.delete('articles', article.id)}>Delete</button></td>
                         </tr>);
                     })}
@@ -45,19 +60,29 @@ class TodoList extends Component {
             </div>
         );    
      }
-     
-     handleApiChange = (e) => {
+        
+    customValidateText(text) {
+        return (text.length > 0 && text.length < 64);
+    }
+
+    dataChanged(data) {
+        const { store } = this.props;
+        console.log(data);
+        store.update('articles', data);
+    }
+        
+    handleApiChange = (e) => {
         const { store } = this.props;
         store.setFakeApi(e.target.checked);
         store.read_all('articles')
-     }
-     
-     addArticle = (e) => {
-         const { store } = this.props;
-         var fakeArticle = { title: Faker.commerce.productName(), author: Faker.name.findName() };
-         console.log('fake article: ', fakeArticle);
-         store.create('articles', fakeArticle);
-     }
+    }
+
+    addArticle = (e) => {
+        const { store } = this.props;
+        var fakeArticle = { title: Faker.commerce.productName(), author: Faker.name.findName() };
+        console.log('fake article: ', fakeArticle);
+        store.create('articles', fakeArticle);
+    }
 };
 
 const inputStyle = {
