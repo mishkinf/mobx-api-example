@@ -68,16 +68,17 @@ class RestApiStoreAdapter extends StoreAdapter {
     }
     
     post(requestStartTime, item) {
-        var data = new FormData();
-        data.append( this.noun, JSON.stringify( item ).toString() );
-
+        var headers = new Headers({"Content-type": "application/json"});
+        const self = this;
         fetch(this.url + '/' + this.noun,
         {
+            mode: 'cors', 
             method: "POST",
-            body: data
+            headers: headers,
+            body: JSON.stringify({ article: item })
         }).then(response => response.json())
         .then(json => {
-            // do something
+            self.read_all();
         })
         .catch((error) => {
             debugger;
