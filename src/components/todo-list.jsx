@@ -19,8 +19,7 @@ class TodoList extends Component {
                 <label style={{float:'right'}}>
                     <Toggle
                         defaultChecked={store.isFakeApi} 
-                        onChange={this.handleApiChange} 
-                        />
+                        onChange={this.toggleFakeApi} />
                         <span style={{lineHeight: '50px'}}>&nbsp;Use Fake Api</span>
                 </label>
                 <Table striped bordered condensed hover>
@@ -41,7 +40,7 @@ class TodoList extends Component {
                                     activeClassName="editing"
                                     text={article.title}
                                     paramName="title"
-                                    change={(data) => this.dataChanged({id: article.id, title: data.title})}
+                                    change={(data) => this.updateField({id: article.id, title: data.title})}
                                     />
                             </td>
                             <td>
@@ -49,7 +48,7 @@ class TodoList extends Component {
                                     activeClassName="editing"
                                     text={article.author}
                                     paramName="author"
-                                    change={(data) => this.dataChanged({id: article.id, author: data.author})}
+                                    change={(data) => this.updateField({id: article.id, author: data.author})}
                                     />
                             </td>
                             <td><button onClick={() => store.delete('articles', article.id)}>Delete</button></td>
@@ -65,13 +64,13 @@ class TodoList extends Component {
         return (text.length > 0 && text.length < 64);
     }
 
-    dataChanged(data) {
+    updateField(data) {
         const { store } = this.props;
         console.log(data);
         store.update('articles', data);
     }
         
-    handleApiChange = (e) => {
+    toggleFakeApi = (e) => {
         const { store } = this.props;
         store.setFakeApi(e.target.checked);
         store.read_all('articles')
@@ -80,7 +79,6 @@ class TodoList extends Component {
     addArticle = (e) => {
         const { store } = this.props;
         var fakeArticle = { title: Faker.commerce.productName(), author: Faker.name.findName() };
-        console.log('fake article: ', fakeArticle);
         store.create('articles', fakeArticle);
     }
 };

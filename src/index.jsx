@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import {observable} from 'mobservable';
 import {observer} from 'mobservable-react';
 import store from './stores/app-state';
-import ArticleList from './components/article-list';
 import TodoList from './components/todo-list';
 import { PageHeader, Grid, Row, Col } from 'react-bootstrap';
 var Loader = require('react-loader');
@@ -15,12 +14,6 @@ var Loader = require('react-loader');
 class App extends Component {
     
      render() {
-        // <Row className="show-grid">
-        //     <Col md={12}>
-        //         <ArticleList store={this.props.store} />
-        //     </Col>
-        // </Row>
-    
         if(this.props.store.articles == undefined || this.props.store.articles.data == undefined) {
             debugger;
         }

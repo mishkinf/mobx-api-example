@@ -35,7 +35,7 @@ class RestApiStoreAdapter extends StoreAdapter {
     
     update(item) {
         console.log('rest adapter update');
-        
+        this.put(item);
     }
     
     read(id) {
@@ -43,41 +43,68 @@ class RestApiStoreAdapter extends StoreAdapter {
     }
     
     read_all() {
-        console.log('rest adapter read all');
-        if(store[this.noun] == undefined || store[this.noun] == null) {
-            store[this.noun] = Object.assign({}, store[this.noun], {
-                data: [],
-                isFetching: true,
-                errors: [],
-                lastRequest: null
-            });        
-        } else {
-            store[this.noun] = Object.assign({}, store[this.noun], {
-                isFetching: true,
-                lastRequest: null                
-            });
-            // debugger;
-            // if(store[this.noun].data == undefined) {
-            //     store[this.noun].data = []
-            // }
-        }
-        
         console.log('Fetching: ', this.url);
         const requestStartTime = (new Date()).getTime();
         this.get(requestStartTime);
     }
     
     post(requestStartTime, item) {
-        var headers = new Headers({"Content-type": "application/json"});
+        this.request_with_payload(requestStartTime, item, 'post');    
+    }
+    
+    request_with_payload(requestStartTime, item, method) {
+        var headers = new Headers({'Content-type': 'application/json'});
+
+        var endpoint = '';
         const self = this;
-        fetch(this.url + '/' + this.noun,
+        
+        if(method == 'post') {
+            endpoint = this.url + '/' + this.noun;
+        } else {
+            endpoint = this.url + '/' + this.noun + '/' + item.id;
+        }
+
+        fetch(endpoint,
         {
             mode: 'cors', 
-            method: "POST",
+            method: method,
             headers: headers,
             body: JSON.stringify({ article: item })
-        }).then(response => response.json())
-        .then(json => {
+        })
+        .then(response => {
+            self.read_all();            
+        })
+        .catch((error) => {
+            debugger;
+            
+            if(store[self.noun].lastRequest != null && requestStartTime < store[self.noun].lastRequest) {
+                console.log('STALE ERROR RESPONSE', 'this response is older than another response! ', requestStartTime, store[this.noun].lastRequest);
+                return;
+            }
+            
+            // do something else
+        });
+    }
+    
+    put(item) {
+        console.log('putting: ', item);
+        const requestStartTime = (new Date()).getTime();
+        this.request_with_payload(requestStartTime, item, 'put');
+    }
+    
+    delete_item(requestStartTime, id) {
+        const self = this;
+        
+        fetch(this.url + '/' + this.noun + '/' + id,
+        {
+            method: 'DELETE', 
+            headers: { 
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            // store[this.noun].data.append(item);
             self.read_all();
         })
         .catch((error) => {
@@ -90,14 +117,6 @@ class RestApiStoreAdapter extends StoreAdapter {
             
             // do something else
         });
-    }
-    
-    put(requestStartTime, item) {
-        
-    }
-    
-    delete(requestStartTime, id) {
-        
     }
     
     get(requestStartTime) {
@@ -139,6 +158,8 @@ class RestApiStoreAdapter extends StoreAdapter {
     
     delete(id) {
         console.log('rest adapter delete');
+        const requestStartTime = (new Date()).getTime();
+        this.delete_item(requestStartTime, id);
     }
 }
 
@@ -147,12 +168,7 @@ class LocalStoreAdapter extends StoreAdapter {
         super();
         this.noun = noun;
         this.global_count = 0
-        // store[this.noun] = {
-        //     isFetching: false,
-        //     data: [],
-        //     errors: []
-        // }
-        
+
         localStorage.setItem(this.noun, JSON.stringify([]));
     }
     
@@ -162,6 +178,7 @@ class LocalStoreAdapter extends StoreAdapter {
         var insertItem = Object.assign({}, item, {id: this.global_count++});
         currentItems.push(insertItem);
         localStorage.setItem(this.noun, JSON.stringify(currentItems));
+        this.read_all();
         return insertItem;
     }
     
@@ -171,12 +188,14 @@ class LocalStoreAdapter extends StoreAdapter {
                 
         Object.assign(currentItem, {}, item);
         localStorage.setItem(this.noun, JSON.stringify(currentItems));
+        this.read_all();
         
         return currentItem;
     }
     
     read_all() {
-        return JSON.parse(localStorage.getItem(this.noun));
+        store[this.noun].data = JSON.parse(localStorage.getItem(this.noun)); 
+        return store[this.noun].data;
     }
     
     read(id) {
@@ -194,6 +213,7 @@ class LocalStoreAdapter extends StoreAdapter {
         var deleteItem = currentItems.filter(function(item) { return id == item.id })[0];
         currentItems.splice(currentItems.indexOf(deleteItem), 1);
         localStorage.setItem(this.noun, JSON.stringify(currentItems));
+        this.read_all();
         
         return currentItems;  
     }
@@ -219,40 +239,28 @@ store.setFakeApi = function(useFakeApi) {
 
 store.get = function(noun) {
     console.log(store[noun].data);
-    // if(store[noun] == undefined || store[noun].data == null || store[noun].data == undefined || !Array.isArray(store[noun].data)) {
-    //     store[noun].data = [];
-    //     //     data: [],
-    //     //     isFetching: false,
-    //     //     errors: [],
-    //     //     lastRequest: null
-    //     // }
-    // } 
-    
+
     return store[noun];
 };
 
 store.create = function(noun, item) {
     store.adapter.create(item);
-    store[noun].data = store.adapter.read_all();
 };
 
 store.update = function(noun, item) {
     store.adapter.update(item);
-    store[noun].data = store.adapter.read_all();
 };
 
 store.read_all = function(noun) {
     store.adapter.read_all();    
-}
+};
 
 store.delete = function(noun, id) {
     store.adapter.delete(id);
-    store[noun].data = store.adapter.read_all();    
 };
 
 store.read = function(noun, id) {
     store.adapter.read(id);
-    store[noun].data = store.adapter.read_all();    
 };
 
 store.apiRequest = function(noun, url, successFn=null, errorFn=null) {
