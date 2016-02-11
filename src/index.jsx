@@ -21,7 +21,7 @@ class App extends Component {
             <Grid>
                 <Row className="show-grid">
                     <Col md={12}>
-                        <PageHeader>React Magic <small>The Ultimate In React Magic</small></PageHeader>
+                        <PageHeader>mobservable-api<small> example application</small></PageHeader>
                     </Col>
                 </Row>
                 
