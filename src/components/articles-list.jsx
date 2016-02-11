@@ -7,7 +7,7 @@ import Toggle from 'react-toggle';
 import InlineEdit from 'react-edit-inline';
 
 @observer
-class TodoList extends Component {
+class ArticlesList extends Component {
      render() {
         const { store } = this.props;
         const articles = store.get('articles');
@@ -98,4 +98,4 @@ const style = {
     fontSize: 30
 }
 
-export default TodoList;
+export default ArticlesList;

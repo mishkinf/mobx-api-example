@@ -30,6 +30,7 @@
     "webpack-dev-server": "^1.8.2"
   },
   "dependencies": {
+    "api-know": "^1.0.18",
     "eslint": "^1.10.3",
     "exports-loader": "^0.6.2",
     "faker": "^3.0.1",
@@ -41,7 +42,6 @@
     "react": "^0.14.0",
     "react-bootstrap": "^0.28.2",
     "react-dom": "^0.14.0",
-    "react-loader": "^2.0.0",
     "react-toggle": "^2.0.1"
   }
 }

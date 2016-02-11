@@ -3,9 +3,8 @@ import ReactDOM from 'react-dom';
 import {observable} from 'mobservable';
 import {observer} from 'mobservable-react';
 import store from './stores/app-state';
-import TodoList from './components/todo-list';
+import ArticlesList from './components/articles-list';
 import { PageHeader, Grid, Row, Col } from 'react-bootstrap';
-var Loader = require('react-loader');
 
 // uncomment next line to enable the dev-tools.
 // import 'mobservable-react-devtools';
@@ -28,9 +27,7 @@ class App extends Component {
                 
                 <Row className="show-grid">
                     <Col md={8}>
-                        <Loader loaded={!this.props.store.articles.isFetching}>
-                            <TodoList store={this.props.store} />
-                        </Loader>
+                        <ArticlesList store={this.props.store} />
                     </Col>
                      <Col md={4}>
                         <div style={{fontSize: 150}}>{count}</div>
