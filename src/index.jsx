@@ -26,6 +26,12 @@ class App extends Component {
                 </Row>
                 
                 <Row className="show-grid">
+                    <Col md={12}>
+                        Toggle using local storage vs using a real restful api. Add, delete, read and update operations demonstrated in this example. Click a title or author in order to edit.
+                    </Col>
+                </Row>
+                <br/>
+                <Row className="show-grid">
                     <Col md={8}>
                         <ArticlesList store={this.props.store} />
                     </Col>
