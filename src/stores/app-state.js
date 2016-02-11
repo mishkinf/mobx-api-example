@@ -1,28 +1,19 @@
-import {observable} from 'mobservable';
-import {LocalStoreAdapter, RestApiStoreAdapter, registerStoreAdapter } from 'api-know';
+import {observable, autorun, isObservable} from 'mobservable';
+import {LocalStoreAdapter, RestApiStoreAdapter, RegisterNoun } from 'mobservable-api';
 
+const apiHost = 'http://localhost:3001/api';
 const store = observable({
-    articles: {
-        data: [],
-        isFetching: false,
-        errors: [],
-        lastRequest: null
-    },
-    isFakeApi: true
+    isFakeApi: true,
+    articles: { }
 });
 
-registerStoreAdapter(store, new LocalStoreAdapter(store, 'articles'));
+RegisterNoun('articles', store, new LocalStoreAdapter());
 
 store.setFakeApi = function(useFakeApi) {
     store.isFakeApi = useFakeApi;
     
-    useFakeApi ? registerStoreAdapter(store, new LocalStoreAdapter(store, 'articles')) : 
-                  registerStoreAdapter(store, new RestApiStoreAdapter(store, 'articles', 'http://localhost:3001/api')); 
-};
-
-store.get = function(noun) {
-    console.log(store[noun].data);
-    return store[noun];
+    useFakeApi ? RegisterNoun('articles', store, new LocalStoreAdapter()) :
+                    RegisterNoun('articles', store, new RestApiStoreAdapter(apiHost)); 
 };
 
 export default store;

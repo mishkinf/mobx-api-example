@@ -16,7 +16,7 @@ class App extends Component {
         if(this.props.store.articles == undefined || this.props.store.articles.data == undefined) {
             debugger;
         }
-        var count = this.props.store.get('articles').data.length
+        var count = this.props.store.articles.data.length
         return (
             <Grid>
                 <Row className="show-grid">

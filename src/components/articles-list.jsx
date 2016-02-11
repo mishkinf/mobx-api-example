@@ -10,7 +10,7 @@ import InlineEdit from 'react-edit-inline';
 class ArticlesList extends Component {
      render() {
         const { store } = this.props;
-        const articles = store.get('articles');
+        const articles = store.articles;
          
         return (
             <div style={style}>
@@ -51,7 +51,7 @@ class ArticlesList extends Component {
                                     change={(data) => this.updateField({id: article.id, author: data.author})}
                                     />
                             </td>
-                            <td><button onClick={() => store.delete('articles', article.id)}>Delete</button></td>
+                            <td><button onClick={() => store.articles.delete(article.id)}>Delete</button></td>
                         </tr>);
                     })}
                     </tbody>
@@ -67,19 +67,19 @@ class ArticlesList extends Component {
     updateField(data) {
         const { store } = this.props;
         console.log(data);
-        store.update('articles', data);
+        store.articles.update(data);
     }
         
     toggleFakeApi = (e) => {
         const { store } = this.props;
         store.setFakeApi(e.target.checked);
-        store.read_all('articles')
+        store.articles.readAll()
     }
 
     addArticle = (e) => {
         const { store } = this.props;
         var fakeArticle = { title: Faker.commerce.productName(), author: Faker.name.findName() };
-        store.create('articles', fakeArticle);
+        store.articles.create(fakeArticle);
     }
 };
 

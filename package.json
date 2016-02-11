@@ -1,14 +1,14 @@
 {
-  "name": "react-reddit-example",
+  "name": "mobservable-api-example",
   "version": "1.0.0",
-  "description": "React on mobservable reddit app example",
+  "description": "Example React application using mobservable-api",
   "scripts": {
     "start": "node server.js",
     "lint": "eslint src"
   },
   "repository": {
     "type": "git",
-    "url": "https://www.github.com:mishkinf/react-reddit-example.git"
+    "url": "https://www.github.com:mishkinf/mobservable-api-example.git"
   },
   "keywords": [
     "react",
@@ -30,7 +30,7 @@
     "webpack-dev-server": "^1.8.2"
   },
   "dependencies": {
-    "mobservable-api": "^1.0.19",
+    "mobservable-api": "^1.0.33",
     "eslint": "^1.10.3",
     "exports-loader": "^0.6.2",
     "faker": "^3.0.1",
