@@ -1,5 +1,5 @@
 import {observable, autorun, isObservable} from 'mobservable';
-import {LocalStoreAdapter, RestApiStoreAdapter, RegisterNoun } from 'mobservable-api';
+import {LocalStoreAdapter, RestApiStoreAdapter, RegisterNoun, RegisterApis } from 'mobservable-api';
 import mapi from 'mobservable-api';
 
 var api_names_hash = {};
