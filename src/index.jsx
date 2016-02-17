@@ -11,7 +11,6 @@ import { PageHeader, Grid, Row, Col } from 'react-bootstrap';
 
 @observer
 class App extends Component {
-    
      render() {
         if(this.props.store.articles == undefined || this.props.store.articles.data == undefined) {
             debugger;

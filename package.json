@@ -30,7 +30,7 @@
     "webpack-dev-server": "^1.8.2"
   },
   "dependencies": {
-    "mobservable-api": "^1.0.34",
+    "mobservable-api": "^1.0.40",
     "eslint": "^1.10.3",
     "exports-loader": "^0.6.2",
     "faker": "^3.0.1",
