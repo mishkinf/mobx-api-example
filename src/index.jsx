@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
-import store from './stores/app-state';
+import store from './stores';
 import ArticlesList from './components/articles-list';
 import RandomList from './components/random-list';
 import { PageHeader, Grid, Row, Col, Panel } from 'react-bootstrap';

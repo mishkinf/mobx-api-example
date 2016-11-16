@@ -1,5 +1,5 @@
-import {observable, autorun, isObservable} from 'mobx';
-import {LocalStoreAdapter, RestApiStoreAdapter, RegisterNoun } from 'mobx-api';
+import { observable, autorun, isObservable } from 'mobx';
+import { LocalStoreAdapter, RestApiStoreAdapter, RegisterNoun } from 'mobx-api';
 import { API_HOST } from '../config/vars';
 
 // 1. Create an observable store with your nouns

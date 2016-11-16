@@ -4,55 +4,58 @@ import { Table } from 'react-bootstrap';
 import Faker from 'faker';
 import Toggle from 'react-toggle';
 import InlineEdit from 'react-edit-inline';
+import Radium from 'radium';
 
 @observer
 class RandomList extends Component {
-     render() {
-        const { store } = this.props;
-        const randomstuff = store.randomstuff;
+  render() {
+    const { store: { randomstuff } } = this.props;
 
-        return (
-            <div style={style}>
-                <button style={inputStyle} onClick={this.addSomething}>Add Something</button>
+    return (
+      <div style={styles.main}>
+        <button style={styles.input} onClick={this.addSomething}>Add Something</button>
 
-                <Table striped bordered condensed hover>
-                    <thead>
-                    <tr>
-                        <th>Something</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {randomstuff.data.map(something => {
-                        return (<tr>
-                            <td>{something.name}</td>
-                        </tr>);
-                    })}
-                    </tbody>
-                </Table>
-            </div>
-        );
-     }
+        <br />
 
-    addSomething = (e) => {
-        const { store } = this.props;
-        var fakeThing = { name: Faker.name.findName() };
-        store.randomstuff.create(fakeThing);
-    }
+        <Table striped bordered condensed hover>
+          <thead>
+            <tr>
+              <th>Something</th>
+            </tr>
+          </thead>
+          <tbody>
+            { this.renderRandomStuff() }
+          </tbody>
+        </Table>
+      </div>
+    );
+  }
+
+  renderRandomStuff() {
+    const { store: { randomstuff } } = this.props;
+
+    return randomstuff.data.map(something => (<tr key={something.name}>
+        <td>{something.name}</td>
+      </tr>)
+    );
+  }
+
+  addSomething = (e) => {
+    const { store: { randomstuff } } = this.props;
+
+    var fakeThing = { name: Faker.name.findName() };
+    randomstuff.create(fakeThing);
+  }
 };
 
-const inputStyle = {
+const styles = {
+  input: {
     fontSize: 18,
     padding: 5
-}
-
-const noContentStyle = {
-    fontSize: 30,
-    textAlign: 'center',
-    lineHeight: 10
-}
-
-const style = {
+  },
+  main: {
     fontSize: 30
+  }
 }
 
-export default RandomList;
+export default Radium(RandomList);
