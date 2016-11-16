@@ -15,8 +15,7 @@ class ArticlesList extends Component {
         <button style={inputStyle} onClick={this.addArticle}>Add Article</button>
 
         <label style={{float:'right'}}>
-          <Toggle defaultChecked={store.isFakeApi} onChange={this.toggleFakeApi} />
-          &nbsp;Use Fake Api
+          <Toggle defaultChecked={store.isFakeApi} onChange={this.toggleFakeApi} /> Use Fake Api
         </label>
 
         { articles.data.length > 0 ? this.renderArticlesTable() : <h3>There are no articles yet!</h3>}
