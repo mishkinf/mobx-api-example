@@ -42,7 +42,7 @@
     "imports-loader": "^0.6.5",
     "install": "^0.4.2",
     "mobx": "^2.6.2",
-    "mobx-api": "../mobx-api",
+    "mobx-api": "^1.1.1",
     "mobx-react": "^3.5.9",
     "npm": "^3.6.0",
     "react": "15.3.2",
