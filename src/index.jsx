@@ -12,12 +12,11 @@ import DevTools from 'mobx-react-devtools';
 class App extends Component {
 
   render() {
-    if(this.props.store.articles == undefined || this.props.store.articles.data == undefined) {
-      debugger;
-    }
-    var count = this.props.store.articles.data.length
+    var count = this.props.store.articles.data.length;
+
     return (
       <Grid>
+
         <Row>
           <Col md={12}>
             <PageHeader>mobx-api<small> example application</small></PageHeader>
@@ -29,7 +28,9 @@ class App extends Component {
             Toggle using local storage vs using a real restful api. Add, delete, read and update operations demonstrated in this example. Click a title or author in order to edit.
           </Col>
         </Row>
+
         <br/>
+
         <Row>
           <Col md={12}>
             <DevTools />
@@ -43,6 +44,7 @@ class App extends Component {
             </Panel>
           </Col>
         </Row>
+
       </Grid>
     );
   }
