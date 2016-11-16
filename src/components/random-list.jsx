@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import { Table } from 'react-bootstrap';
 import Faker from 'faker';
@@ -11,11 +10,11 @@ class RandomList extends Component {
      render() {
         const { store } = this.props;
         const randomstuff = store.randomstuff;
-         
+
         return (
             <div style={style}>
                 <button style={inputStyle} onClick={this.addSomething}>Add Something</button>
-                
+
                 <Table striped bordered condensed hover>
                     <thead>
                     <tr>
@@ -31,7 +30,7 @@ class RandomList extends Component {
                     </tbody>
                 </Table>
             </div>
-        );    
+        );
      }
 
     addSomething = (e) => {
