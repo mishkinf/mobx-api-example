@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {observable} from 'mobservable';
-import {observer} from 'mobservable-react';
+import {observable} from 'mobx';
+import {observer} from 'mobx-react';
 import store from './stores/app-state';
 import ArticlesList from './components/articles-list';
+import RandomList from './components/random-list';
 import { PageHeader, Grid, Row, Col } from 'react-bootstrap';
 
 // uncomment next line to enable the dev-tools.
-// import 'mobservable-react-devtools';
+// import 'mobx-react-devtools';
 
 @observer
 class App extends Component {
@@ -21,7 +22,7 @@ class App extends Component {
             <Grid>
                 <Row className="show-grid">
                     <Col md={12}>
-                        <PageHeader>mobservable-api<small> example application</small></PageHeader>
+                        <PageHeader>mobx-api<small> example application</small></PageHeader>
                     </Col>
                 </Row>
                 
@@ -34,6 +35,7 @@ class App extends Component {
                 <Row className="show-grid">
                     <Col md={8}>
                         <ArticlesList store={this.props.store} />
+                        <RandomList store={this.props.store} />
                     </Col>
                      <Col md={4}>
                         <div style={{fontSize: 150}}>{count}</div>

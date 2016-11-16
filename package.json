@@ -1,20 +1,20 @@
 {
-  "name": "mobservable-api-example",
+  "name": "mobx-api-example",
   "version": "1.0.0",
-  "description": "Example React application using mobservable-api",
+  "description": "Example React application using mobx-api",
   "scripts": {
     "start": "node server.js",
     "lint": "eslint src"
   },
   "repository": {
     "type": "git",
-    "url": "https://www.github.com:mishkinf/mobservable-api-example.git"
+    "url": "https://www.github.com:mishkinf/mobx-api-example.git"
   },
   "keywords": [
     "react",
     "reactjs",
     "boilerplate",
-    "mobservable",
+    "mobx",
     "starter-kit"
   ],
   "author": "Mishkin Faustini <mishkinf@gmail.com> (http://github.com/mishkinf)",
@@ -24,24 +24,25 @@
     "babel-eslint": "^3.1.9",
     "babel-loader": "^5.1.2",
     "eslint-plugin-react": "^2.3.0",
-    "mobservable-react-devtools": "^2.0.1",
+    "mobx-react-devtools": "^2.0.1",
     "react-hot-loader": "^1.2.7",
     "webpack": "^1.9.6",
     "webpack-dev-server": "^1.8.2"
   },
   "dependencies": {
-    "mobservable-api": "^1.0.34",
     "eslint": "^1.10.3",
     "exports-loader": "^0.6.2",
     "faker": "^3.0.1",
     "imports-loader": "^0.6.5",
     "install": "^0.4.2",
-    "mobservable": "^1.0.0",
-    "mobservable-react": "^2.0.0",
+    "mobx": "^2.6.2",
+    "mobx-api": "^1.1.0",
+    "mobx-react": "^3.5.9",
     "npm": "^3.6.0",
     "react": "^0.14.0",
     "react-bootstrap": "^0.28.2",
     "react-dom": "^0.14.0",
+    "react-edit-inline": "^1.0.8",
     "react-toggle": "^2.0.1"
   }
 }

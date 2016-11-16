@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {observable} from 'mobservable';
-import {observer} from 'mobservable-react';
+import {observable} from 'mobx';
+import {observer} from 'mobx-react';
 import { Table } from 'react-bootstrap';
 import Faker from 'faker';
 import Toggle from 'react-toggle';
