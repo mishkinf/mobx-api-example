@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import store from './stores';
-import ArticlesList from './components/articles-list';
-import RandomList from './components/random-list';
+import ArticlesList from './components/ArticlesList';
+import RandomList from './components/RandomList';
 import { PageHeader, Grid, Row, Col, Panel } from 'react-bootstrap';
 import DevTools from 'mobx-react-devtools';
 
@@ -25,7 +25,7 @@ class App extends Component {
 
         <Row>
           <Col md={12}>
-            Toggle using local storage vs using a real restful api. Add, delete, read and update operations demonstrated in this example. Click a title or author in order to edit.
+            Quickly interact with localStorage, sessionStorage or RESTFul APIs in your applications. Add, delete, read and update operations demonstrated in this example. Click a title or author in order to edit.
           </Col>
         </Row>
 
@@ -35,11 +35,11 @@ class App extends Component {
           <Col md={12}>
             <DevTools />
 
-            <Panel header={<h2>Articles</h2>}>
+            <Panel header={<h2>Articles (Local Storage or RESTFul API)</h2>}>
               <ArticlesList store={this.props.store} />
             </Panel>
 
-            <Panel header={<h2>Random</h2>}>
+            <Panel header={<h2>Random (Session Storage)</h2>}>
               <RandomList store={this.props.store} />
             </Panel>
           </Col>

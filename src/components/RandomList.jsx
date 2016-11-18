@@ -17,9 +17,10 @@ class RandomList extends Component {
 
         <br />
 
-        <Table striped bordered condensed hover>
+        <Table>
           <thead>
             <tr>
+              <th>Id</th>
               <th>Something</th>
             </tr>
           </thead>
@@ -34,7 +35,8 @@ class RandomList extends Component {
   renderRandomStuff() {
     const { store: { randomstuff } } = this.props;
 
-    return randomstuff.data.map(something => (<tr key={something.name}>
+    return randomstuff.data.map(something => (<tr key={something.id}>
+        <td>{something.id}</td>
         <td>{something.name}</td>
       </tr>)
     );

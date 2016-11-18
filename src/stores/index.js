@@ -1,5 +1,5 @@
 import { observable, autorun, isObservable } from 'mobx';
-import { LocalStoreAdapter, RestApiStoreAdapter, RegisterNoun } from 'mobx-api';
+import { LocalStoreAdapter, SessionStoreAdapter, RestApiStoreAdapter, StoreAdapter } from 'mobx-api';
 import { API_HOST } from '../config/vars';
 
 // 1. Create an observable store with your nouns
@@ -9,17 +9,27 @@ const store = observable({
     randomstuff: {}
 });
 
+const storeAdapter = new StoreAdapter(store);
+const adapters = {
+  localStorage: new LocalStoreAdapter(),
+  sessionStorage: new SessionStoreAdapter(),
+  railsApi: new RestApiStoreAdapter(API_HOST)
+}
+
 // 2. Register your nouns and attach a mobx-api adapter to the noun
-RegisterNoun('articles', store, new LocalStoreAdapter());
-RegisterNoun('randomstuff', store, new LocalStoreAdapter());
+storeAdapter.registerAdapter('articles', adapters.localStorage);
+storeAdapter.registerAdapter('randomstuff', adapters.sessionStorage);
+
+store.articles.readAll();
+store.randomstuff.readAll();
 
 store.setFakeApi = function(useFakeApi) {
     store.isFakeApi = useFakeApi;
 
     if(useFakeApi) {
-      RegisterNoun('articles', store, new LocalStoreAdapter());
+      storeAdapter.registerAdapter('articles', adapters.localStorage);
     } else {
-      RegisterNoun('articles', store, new RestApiStoreAdapter(API_HOST, 'article'));
+      storeAdapter.registerAdapter('articles', adapters.railsApi);
     }
 };
 

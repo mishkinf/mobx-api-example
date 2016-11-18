@@ -28,7 +28,7 @@ class ArticlesList extends Component {
 
   renderArticlesTable() {
     return (
-      <Table striped bordered condensed hover>
+      <Table>
         <thead>
           <tr>
             <th>Id</th>
@@ -50,7 +50,7 @@ class ArticlesList extends Component {
 
     return articles.data.map(article => {
       return (
-        <tr key={article.id}>
+        <tr key={article.id.toString() + article.title}>
           <td>{article.id}</td>
           <td>
             <InlineEdit
@@ -66,7 +66,7 @@ class ArticlesList extends Component {
               paramName="author"
               change={(data) => this.updateField({id: article.id, author: data.author})} />
           </td>
-          <td><button onClick={() => store.articles.delete(article.id)}>Delete</button></td>
+          <td><button onClick={() => store.articles.delete(article)}>Delete</button></td>
         </tr>);
       }
     );
@@ -78,7 +78,7 @@ class ArticlesList extends Component {
 
   updateField(data) {
     const { store: { articles } } = this.props;
-    
+
     articles.update(data);
   }
 
