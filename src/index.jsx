@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import store from './stores';
 import ArticlesList from './components/ArticlesList';
@@ -12,7 +11,7 @@ import DevTools from 'mobx-react-devtools';
 class App extends Component {
 
   render() {
-    var count = this.props.store.articles.data.length;
+    const { store } = this.props;
 
     return (
       <Grid>
@@ -36,11 +35,11 @@ class App extends Component {
             <DevTools />
 
             <Panel header={<h2>Articles (Local Storage or RESTFul API)</h2>}>
-              <ArticlesList store={this.props.store} />
+              <ArticlesList articles={store.articles} isFakeApi={store.isFakeApi} setFakeApi={store.setFakeApi} />
             </Panel>
 
             <Panel header={<h2>Random (Session Storage)</h2>}>
-              <RandomList store={this.props.store} />
+              <RandomList randomstuff={store.randomstuff} />
             </Panel>
           </Col>
         </Row>

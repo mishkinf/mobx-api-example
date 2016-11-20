@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {observer} from 'mobx-react';
 import { Table } from 'react-bootstrap';
 import Faker from 'faker';
@@ -8,8 +8,12 @@ import Radium from 'radium';
 
 @observer
 class RandomList extends Component {
+  static propTypes = {
+      randomstuff: PropTypes.object.isRequired
+  };
+
   render() {
-    const { store: { randomstuff } } = this.props;
+    const { randomstuff } = this.props;
 
     return (
       <div style={styles.main}>
@@ -33,7 +37,7 @@ class RandomList extends Component {
   }
 
   renderRandomStuff() {
-    const { store: { randomstuff } } = this.props;
+    const { randomstuff } = this.props;
 
     return randomstuff.data.map(something => (<tr key={something.id}>
         <td>{something.id}</td>
@@ -43,7 +47,7 @@ class RandomList extends Component {
   }
 
   addSomething = (e) => {
-    const { store: { randomstuff } } = this.props;
+    const { randomstuff } = this.props;
 
     var fakeThing = { name: Faker.name.findName() };
     randomstuff.create(fakeThing);
