@@ -17,6 +17,10 @@ class ArticlesList extends Component {
   render() {
     const { articles , isFakeApi } = this.props;
 
+    if(articles.isFetching) {
+      return (<div><h1>ARTICLES ARE LOADING</h1></div>);
+    }
+
     return (
       <div style={styles.main}>
         <button style={styles.input} onClick={this.addArticle}>Add Article</button>

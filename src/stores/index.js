@@ -1,6 +1,6 @@
 import { observable, autorun, isObservable } from 'mobx';
 import { LocalStoreAdapter, SessionStoreAdapter, RestApiStoreAdapter, StoreAdapter } from 'mobx-api';
-import { API_HOST } from '../config/vars';
+import { API } from '../config/vars';
 
 // 1. Create an observable store with your nouns
 const store = observable({
@@ -13,7 +13,7 @@ const storeAdapter = new StoreAdapter(store);
 const adapters = {
   localStorage: new LocalStoreAdapter(),
   sessionStorage: new SessionStoreAdapter(),
-  railsApi: new RestApiStoreAdapter(API_HOST)
+  railsApi: new RestApiStoreAdapter(API.host, API.headers)
 }
 
 // 2. Register your nouns and attach a mobx-api adapter to the noun
